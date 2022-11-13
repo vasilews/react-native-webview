@@ -200,6 +200,10 @@ public class RNCWebViewModule extends ReactContextBaseJavaModule implements Acti
     return null;
   }
 
+  public void setFileChosenCallback(ValueCallback<String> callback) {
+    fileChosenCallback = callback;
+  }
+
   public void startPhotoPickerIntent(ValueCallback<Uri> filePathCallback, String acceptType) {
     filePathCallbackLegacy = filePathCallback;
 
