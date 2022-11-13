@@ -199,7 +199,15 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
     if (ReactBuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       WebView.setWebContentsDebuggingEnabled(true);
     }
-
+    module.setFileChosenCallback(new ValueCallback<String>() {
+      public void onReceiveValue(String unused) {
+        WritableMap event = Arguments.createMap();
+        event.putDouble("target", webView.getId());
+        dispatchEvent(
+          webView,
+          new TopFileChosenEvent(webView.getId(), event));
+      }
+    });
     webView.setDownloadListener(new DownloadListener() {
       public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
         webView.setIgnoreErrFailedForThisURL(url);
@@ -222,15 +230,7 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
           System.out.println("Error getting cookie for DownloadManager: " + e.toString());
           e.printStackTrace();
         }
-        getModule(mReactContext).setFileChosenCallback(new ValueCallback<String>() {
-        public void onReceiveValue(String unused) {
-          WritableMap event = Arguments.createMap();
-          event.putDouble("target", webView.getId());
-          ((RNCWebView) webView).dispatchEvent(
-            webView,
-            new TopFileChosenEvent(webView.getId(), event));
-        }
-      });
+
         //Finish setting up request
         request.addRequestHeader("User-Agent", userAgent);
         request.setTitle(fileName);
