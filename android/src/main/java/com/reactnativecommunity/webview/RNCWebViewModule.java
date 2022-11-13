@@ -46,6 +46,7 @@ public class RNCWebViewModule extends ReactContextBaseJavaModule implements Acti
   private static final int FILE_DOWNLOAD_PERMISSION_REQUEST = 1;
   private ValueCallback<Uri> filePathCallbackLegacy;
   private ValueCallback<Uri[]> filePathCallback;
+  private ValueCallback<String> fileChosenCallback;
   private File outputImage;
   private File outputVideo;
   private DownloadManager.Request downloadRequest;
@@ -109,6 +110,10 @@ public class RNCWebViewModule extends ReactContextBaseJavaModule implements Acti
 
     if (filePathCallback == null && filePathCallbackLegacy == null) {
       return;
+    }
+
+    if (fileChosenCallback != null && resultCode == RESULT_OK) {
+      fileChosenCallback.onReceiveValue("File choosen");
     }
 
     boolean imageTaken = false;
@@ -331,7 +336,7 @@ public class RNCWebViewModule extends ReactContextBaseJavaModule implements Acti
       Log.e("CREATE FILE", "Error occurred while creating the File", e);
       e.printStackTrace();
     }
-    
+
     return intent;
   }
 

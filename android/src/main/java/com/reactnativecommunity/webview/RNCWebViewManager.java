@@ -72,6 +72,7 @@ import com.reactnativecommunity.webview.events.TopLoadingStartEvent;
 import com.reactnativecommunity.webview.events.TopMessageEvent;
 import com.reactnativecommunity.webview.events.TopShouldStartLoadWithRequestEvent;
 import com.reactnativecommunity.webview.events.TopRenderProcessGoneEvent;
+import com.reactnativecommunity.webview.events.TopFileChosenEvent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -221,7 +222,15 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
           System.out.println("Error getting cookie for DownloadManager: " + e.toString());
           e.printStackTrace();
         }
-
+        getModule(mReactContext).setFileChosenCallback(new ValueCallback<String>() {
+        public void onReceiveValue(String unused) {
+          WritableMap event = Arguments.createMap();
+          event.putDouble("target", webView.getId());
+          ((RNCWebView) webView).dispatchEvent(
+            webView,
+            new TopFileChosenEvent(webView.getId(), event));
+        }
+      });
         //Finish setting up request
         request.addRequestHeader("User-Agent", userAgent);
         request.setTitle(fileName);
@@ -574,6 +583,7 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
     if (export == null) {
       export = MapBuilder.newHashMap();
     }
+    export.put(TopFileChosenEvent.EVENT_NAME, MapBuilder.of("registrationName", "onFileChosen"));
     export.put(TopLoadingProgressEvent.EVENT_NAME, MapBuilder.of("registrationName", "onLoadingProgress"));
     export.put(TopShouldStartLoadWithRequestEvent.EVENT_NAME, MapBuilder.of("registrationName", "onShouldStartLoadWithRequest"));
     export.put(ScrollEventType.getJSEventName(ScrollEventType.SCROLL), MapBuilder.of("registrationName", "onScroll"));

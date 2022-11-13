@@ -31,6 +31,7 @@ import {
   NativeWebViewAndroid,
   State,
   RNCWebViewUIManagerAndroid,
+  WebViewFileChosenEvent,
 } from './WebViewTypes';
 
 import styles from './WebView.styles';
@@ -276,6 +277,13 @@ class WebView extends React.Component<AndroidWebViewProps, State> {
     }
   };
 
+  onFileChosen = (event: WebViewFileChosenEvent) => {
+    const { onFileChosen } = this.props;
+    if (onFileChosen) {
+      onFileChosen(event);
+    }
+  };
+
   onShouldStartLoadWithRequestCallback = (
     shouldStart: boolean,
     url: string,
@@ -353,6 +361,7 @@ class WebView extends React.Component<AndroidWebViewProps, State> {
         onLoadingError={this.onLoadingError}
         onLoadingFinish={this.onLoadingFinish}
         onLoadingProgress={this.onLoadingProgress}
+        onFileChosen={this.onFileChosen}
         onLoadingStart={this.onLoadingStart}
         onHttpError={this.onHttpError}
         onRenderProcessGone={this.onRenderProcessGone}

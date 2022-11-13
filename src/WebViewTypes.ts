@@ -102,6 +102,10 @@ export interface WebViewNativeProgressEvent extends WebViewNativeEvent {
   progress: number;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface WebViewNativeFileChosenEvent extends WebViewNativeEvent {
+}
+
 export interface WebViewNavigation extends WebViewNativeEvent {
   navigationType:
     | 'click'
@@ -142,7 +146,9 @@ export interface WebViewRenderProcessGoneDetail {
 }
 
 export type WebViewEvent = NativeSyntheticEvent<WebViewNativeEvent>;
-
+export type WebViewFileChosenEvent = NativeSyntheticEvent<
+  WebViewNativeFileChosenEvent
+>;
 export type WebViewProgressEvent = NativeSyntheticEvent<
   WebViewNativeProgressEvent
 >;
@@ -284,6 +290,7 @@ export interface AndroidNativeWebViewProps extends CommonNativeWebViewProps {
   mixedContentMode?: 'never' | 'always' | 'compatibility';
   onContentSizeChange?: (event: WebViewEvent) => void;
   onRenderProcessGone?: (event: WebViewRenderProcessGoneEvent) => void;
+  onFileChosen?: (event: WebViewFileChosenEvent) => void;
   overScrollMode?: OverScrollModeType;
   saveFormDataDisabled?: boolean;
   textZoom?: number;
@@ -689,7 +696,7 @@ export interface MacOSWebViewProps extends WebViewSharedProps {
 export interface AndroidWebViewProps extends WebViewSharedProps {
   onNavigationStateChange?: (event: WebViewNavigation) => void;
   onContentSizeChange?: (event: WebViewEvent) => void;
-
+  onFileChosen?: (event: WebViewEvent) => void;
   /**
    * Function that is invoked when the `WebView` process crashes or is killed by the OS.
    * Works only on Android (minimum API level 26).
