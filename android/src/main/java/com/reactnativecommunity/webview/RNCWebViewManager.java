@@ -199,6 +199,8 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
     if (ReactBuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       WebView.setWebContentsDebuggingEnabled(true);
     }
+
+    RNCWebViewModule module = getModule(reactContext);
     module.setFileChosenCallback(new ValueCallback<String>() {
       public void onReceiveValue(String unused) {
         WritableMap event = Arguments.createMap();
@@ -208,6 +210,7 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
           new TopFileChosenEvent(webView.getId(), event));
       }
     });
+
     webView.setDownloadListener(new DownloadListener() {
       public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
         webView.setIgnoreErrFailedForThisURL(url);
